@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
+    
+    <script>
+        var scene = new THREE.Scene();
+var mesh,material;
+
+var camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth/window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.z = 40;
+var color = new THREE.Color("#78aaaa");
+
+var geometry = new THREE.SphereGeometry(24,32,32);
+//THREE.ImageUtils.crossOrigin = true;
+
+var textureLoader = new THREE.TextureLoader();
+textureLoader.crossOrigin = true;
+textureLoader.load("tv.jpg", function(texture) {
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(3,3);
+  material = new THREE.MeshLambertMaterial({map:texture});
+  mesh = new THREE.Mesh(geometry,material);
+  scene.add(mesh);
+})
+
+
+
+var renderer = new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+//ADD LIGHTING
+var light = new THREE.PointLight(0xFFFFFF);
+light.position.set(10,0,25);
+scene.add(light);
+light.position.set(-10,0,25);
+scene.add(light);
+var dLight = new THREE.DirectionalLight(0xFFFFFF);
+dLight.position.set(0,1,0);
+scene.add(dLight);
+dLight.position.set(1,0,0);
+scene.add(dLight);
+dLight.position.set(0,0,1);
+scene.add(dLight);
+
+
+var render = function() {
+  requestAnimationFrame(render);
+  mesh.rotation.x += 0.01;
+  mesh.rotation.y += 0.01;
+  renderer.render(scene,camera);  
+};
+
+render();
+
+    </script>
+</body>
+</html>
